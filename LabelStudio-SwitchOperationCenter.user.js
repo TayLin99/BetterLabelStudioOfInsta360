@@ -2,7 +2,7 @@
 // @name         LabelStudio-SwitchOperationCenter.user.js
 // @namespace    https://label.insta360.com/
 // @version      1.7.0
-// @description  稳定覆盖顶部操作中心，并提供下拉导航；不修改 React 管理的面包屑 DOM
+// @description  稳定覆盖顶部操作中心，并提供下拉导航
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
 // @match        https://label.insta360.com/*
 // @match        http://label.insta360.com/*
