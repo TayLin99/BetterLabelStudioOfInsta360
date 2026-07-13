@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Insta360 Label 操作中心下拉导航
+// @name         Insta360 LabelStudio 操作中心下拉导航
 // @namespace    https://label.insta360.com/
 // @author       Codex
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
