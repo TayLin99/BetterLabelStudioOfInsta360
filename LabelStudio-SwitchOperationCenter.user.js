@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         LabelStudio-SwitchOperationCenter
+// @name         Insta360 Label 操作中心下拉导航
 // @namespace    https://label.insta360.com/
-// @version      1.7.2
 // @author       Codex
-// @description  稳定覆盖顶部操作中心，并提供下拉导航
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
-// @match        https://label.insta360.com/*
-// @match        http://label.insta360.com/*
 // @updateURL    https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
 // @downloadURL  https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
+// @version      1.8.2
+// @description  操作中心的下拉导航+logo回到主页
+// @match        https://label.insta360.com/*
+// @match        http://label.insta360.com/*
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
@@ -157,6 +157,26 @@
         line-height: 22px;
       }
 
+      .ls-menu-header__trigger img.tm-home-trigger {
+        width: 150px !important;
+        height: 47px !important;
+        box-sizing: border-box;
+        border-radius: 6px;
+        cursor: pointer !important;
+        object-fit: contain;
+        object-position: left center;
+        padding: 0 8px;
+        transition: background .15s ease, box-shadow .15s ease, transform .15s ease;
+      }
+
+      .ls-menu-header__trigger img.tm-home-trigger:hover {
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(24, 144, 255, 0.26), 0 0 0 1px rgba(24, 144, 255, 0.16);
+      }
+
+      .ls-menu-header__trigger img.tm-home-trigger:active {
+        transform: translateY(1px);
+      }
       #${DROPDOWN_ID} {
         position: fixed;
         z-index: 999999;
@@ -243,6 +263,35 @@
       || document.querySelector('.ls-menu-header__context');
   }
 
+  function bindHomeTrigger() {
+    const trigger = document.querySelector('.ls-menu-header__trigger img[alt="Label Studio Logo"]')
+      || document.querySelector('.ls-menu-header__trigger img');
+    if (!trigger) return;
+
+    trigger.classList.add('tm-home-trigger');
+    trigger.setAttribute('title', '返回主页');
+    trigger.setAttribute('role', 'button');
+    trigger.setAttribute('tabindex', '0');
+
+    if (trigger.dataset.tmHomeTriggerBound === '1') return;
+    trigger.dataset.tmHomeTriggerBound = '1';
+
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      location.assign(new URL('/', location.origin).href);
+    }, true);
+
+    trigger.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      location.assign(new URL('/', location.origin).href);
+    });
+  }
   function getOrCreateOverlay() {
     let overlay = document.getElementById(OVERLAY_ID);
     if (overlay) return overlay;
@@ -442,7 +491,14 @@
 
   function getCurrentPackagePath() {
     const path = normalizePath(location.pathname);
-    const match = path.match(/^(?:\/(?:annotation|review|acceptance))?(\/workspaces\/.*\/projects\/[^/]+(?:\/.*)?)$/);
+    const match = path.match(/^(?:\/(?:annotation|review|acceptance))?(\/workspaces\/.*\/projects\/[^/]+\/data(?:\/.*)?)$/);
+
+    return match ? match[1] : '';
+  }
+
+  function getProjectSettingsPackagePath() {
+    const path = normalizePath(location.pathname);
+    const match = path.match(/^(\/workspaces\/.*\/projects\/[^/]+)\/settings$/);
 
     return match ? match[1] : '';
   }
@@ -450,9 +506,14 @@
   function getNavigationUrl(item) {
     const centerPrefix = getCenterPrefix(item);
     const packagePath = getCurrentPackagePath();
+    const settingsPackagePath = getProjectSettingsPackagePath();
 
     if (centerPrefix !== null && packagePath) {
       return new URL(`${centerPrefix}${packagePath}`, location.origin).href;
+    }
+
+    if (['/annotation', '/review', '/acceptance'].includes(item.href) && settingsPackagePath) {
+      return new URL(`${item.href}${settingsPackagePath}`, location.origin).href;
     }
 
     return new URL(item.href, location.origin).href;
@@ -509,6 +570,7 @@
 
   function syncOperationCenter() {
     addStyle();
+    bindHomeTrigger();
 
     const anchor = getPositionAnchor();
     const breadcrumbAnchor = getBreadcrumbAnchor();
