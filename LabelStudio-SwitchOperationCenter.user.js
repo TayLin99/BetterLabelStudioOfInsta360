@@ -1,11 +1,13 @@
 // ==UserScript==
-// @name         LabelStudio-SwitchOperationCenter
+// @name         LabelStudio-SwitchOperationCenter.user.js
 // @namespace    https://label.insta360.com/
-// @version      1.6.3
-// @description  稳定覆盖顶部操作中心，并提供下拉导航
+// @version      1.7.0
+// @description  稳定覆盖顶部操作中心，并提供下拉导航；不修改 React 管理的面包屑 DOM
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
 // @match        https://label.insta360.com/*
 // @match        http://label.insta360.com/*
+// @updateURL    https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
+// @downloadURL  https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
@@ -431,6 +433,30 @@
     return item === getCurrentItem();
   }
 
+  function getCenterPrefix(item) {
+    if (item.href === '/workspaces') return '';
+    if (['/annotation', '/review', '/acceptance'].includes(item.href)) return item.href;
+    return null;
+  }
+
+  function getCurrentPackagePath() {
+    const path = normalizePath(location.pathname);
+    const match = path.match(/^(?:\/(?:annotation|review|acceptance))?(\/workspaces\/.*\/projects\/[^/]+(?:\/.*)?)$/);
+
+    return match ? match[1] : '';
+  }
+
+  function getNavigationUrl(item) {
+    const centerPrefix = getCenterPrefix(item);
+    const packagePath = getCurrentPackagePath();
+
+    if (centerPrefix !== null && packagePath) {
+      return new URL(`${centerPrefix}${packagePath}`, location.origin).href;
+    }
+
+    return new URL(item.href, location.origin).href;
+  }
+
   function renderDropdown() {
     const dropdown = getOrCreateDropdown();
     dropdown.innerHTML = '';
@@ -460,7 +486,7 @@
           return;
         }
 
-        location.assign(new URL(item.href, location.origin).href);
+        location.assign(getNavigationUrl(item));
       });
 
       dropdown.appendChild(button);
