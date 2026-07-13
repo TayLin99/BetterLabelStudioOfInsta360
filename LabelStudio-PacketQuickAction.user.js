@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Insta360 LabelStudio 包行为快捷操作按钮
+// @name         Insta360 LabelStudio 包行为快捷按钮
 // @namespace    https://label.insta360.com/
 // @version      1.0.12
 // @description  在项目卡片和 data 页工具栏添加标注、审核、验收、管理快捷按钮
