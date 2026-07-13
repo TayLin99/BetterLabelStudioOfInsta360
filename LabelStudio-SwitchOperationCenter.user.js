@@ -5,8 +5,8 @@
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
 // @updateURL    https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
 // @downloadURL  https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
-// @version      1.8.2
-// @description  操作中心的下拉导航+logo回到主页
+// @version      1.8.3
+// @description  操作中心切换增强
 // @match        https://label.insta360.com/*
 // @match        http://label.insta360.com/*
 // @run-at       document-idle
@@ -308,7 +308,7 @@
 
       const dropdown = document.getElementById(DROPDOWN_ID);
       if (dropdown?.classList.contains('is-open')) {
-        closeDropdown();
+        location.assign(new URL(getCurrentItem().href, location.origin).href);
       } else {
         openDropdown(overlay);
       }
@@ -317,7 +317,12 @@
     overlay.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        openDropdown(overlay);
+        const dropdown = document.getElementById(DROPDOWN_ID);
+        if (dropdown?.classList.contains('is-open')) {
+          location.assign(new URL(getCurrentItem().href, location.origin).href);
+        } else {
+          openDropdown(overlay);
+        }
       }
     });
 
@@ -503,10 +508,39 @@
     return match ? match[1] : '';
   }
 
+  function getWorkspaceListContext() {
+    const path = normalizePath(location.pathname);
+    const search = location.search || '';
+    const projectMatch = path.match(/^\/workspaces\/([^/]+)\/projects$/);
+
+    if (projectMatch) {
+      return { workspaceId: projectMatch[1], search };
+    }
+
+    const centerMatch = path.match(/^\/(?:annotation|review|acceptance)\/workspaces\/([^/]+)$/);
+
+    return centerMatch ? { workspaceId: centerMatch[1], search } : null;
+  }
+
+  function getWorkspaceListUrl(item, context) {
+    if (!context || !['/workspaces', '/annotation', '/review', '/acceptance'].includes(item.href)) return '';
+
+    const path = item.href === '/workspaces'
+      ? `/workspaces/${context.workspaceId}/projects`
+      : `${item.href}/workspaces/${context.workspaceId}`;
+
+    return new URL(`${path}${context.search}`, location.origin).href;
+  }
+
   function getNavigationUrl(item) {
     const centerPrefix = getCenterPrefix(item);
     const packagePath = getCurrentPackagePath();
     const settingsPackagePath = getProjectSettingsPackagePath();
+    const workspaceListUrl = getWorkspaceListUrl(item, getWorkspaceListContext());
+
+    if (workspaceListUrl) {
+      return workspaceListUrl;
+    }
 
     if (centerPrefix !== null && packagePath) {
       return new URL(`${centerPrefix}${packagePath}`, location.origin).href;
