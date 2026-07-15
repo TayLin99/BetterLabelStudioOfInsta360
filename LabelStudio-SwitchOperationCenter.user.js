@@ -1,17 +1,17 @@
 // ==UserScript==
 // @name         Insta360 LabelStudio 操作中心下拉导航
-// @namespace    https://label.insta360.com/
+// @namespace    LabelStudio-SwitchOperationCenter
 // @author       Codex
+// @version      1.8.4
+// @description  操作中心切换增强
+// @match        *://label.insta360.com/*
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
 // @updateURL    https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
 // @downloadURL  https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-SwitchOperationCenter.user.js
-// @version      1.8.3
-// @description  操作中心切换增强
-// @match        https://label.insta360.com/*
-// @match        http://label.insta360.com/*
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
+
 
 (function () {
   'use strict';
