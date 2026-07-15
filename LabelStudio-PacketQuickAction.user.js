@@ -1,16 +1,18 @@
 // ==UserScript==
 // @name         Insta360 LabelStudio 包行为快捷按钮
-// @namespace    https://label.insta360.com/
-// @version      1.0.12
-// @description  在项目卡片和 data 页工具栏添加标注、审核、验收、管理快捷按钮
+// @namespace    LabelStudio-PacketQuickAction
 // @author       Codex
+// @version      1.0.13
+// @description  在项目卡片和 data 页工具栏添加标注、审核、验收、管理快捷按钮
+// @match        *://label.insta360.com/*
+
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
-// @match        https://label.insta360.com/*
 // @updateURL    https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-PacketQuickAction.user.js
 // @downloadURL  https://raw.githubusercontent.com/TayLin99/BetterLabelStudioOfInsta360/refs/heads/main/LabelStudio-PacketQuickAction.user.js
 // @run-at       document-start
 // @grant        none
 // ==/UserScript==
+
 
 (function () {
   'use strict';
