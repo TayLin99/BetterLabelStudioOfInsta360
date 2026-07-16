@@ -6,6 +6,8 @@
 // @author       Codex
 // @match        https://label.insta360.com/*
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
+// @updateURL    https://github.com/TayLin99/BetterLabelStudioOfInsta360/raw/refs/heads/main/LabelStudio-FrameByFrameShortcuts.user.js
+// @downloadURL  https://github.com/TayLin99/BetterLabelStudioOfInsta360/raw/refs/heads/main/LabelStudio-FrameByFrameShortcuts.user.js
 // @grant        none
 // @run-at       document-start
 // @inject-into  page
