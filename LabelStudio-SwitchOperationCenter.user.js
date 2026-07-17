@@ -2,7 +2,7 @@
 // @name         Insta360 LabelStudio 操作中心下拉导航
 // @namespace    LabelStudio-SwitchOperationCenter
 // @author       Codex
-// @version      1.8.4
+// @version      1.8.5
 // @description  操作中心切换增强
 // @match        *://label.insta360.com/*
 // @supportURL   https://github.com/TayLin99/BetterLabelStudioOfInsta360
@@ -11,7 +11,6 @@
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
-
 
 (function () {
   'use strict';
@@ -578,7 +577,7 @@
         event.stopPropagation();
 
         if (isActiveItem(item)) {
-          closeDropdown();
+          location.assign(new URL(item.href, location.origin).href);
           return;
         }
 
